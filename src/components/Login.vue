@@ -2,24 +2,62 @@
   <div class="cuerpo">
     <div class="container">
       <h2>Iniciar Sesión</h2>
-      <form>
+      <form @submit.prevent="onSubmit">
         <div class="input-group">
           <label for="username">Usuario</label>
-          <input type="text" id="username" name="username" required />
+          <input
+            type="text"
+            id="username"
+            name="username"
+            v-model="username"
+            required
+          />
+          <p v-show="error" class="error">
+            El Usuario debe tener letras y numeros
+          </p>
         </div>
-        <button class="btn" type="submit">Iniciar Sesión</button>
+        <input
+          class="btn"
+          type="submit"
+          value="Iniciar Sesión"
+          @click="guardarUsuario"
+          onsubmit="return false"
+        />
+        <!-- <p>{{ datosVuex }}</p>  solo para ver que este bien  -->
       </form>
     </div>
   </div>
 </template>
 
 <script>
+import validarStringAlfaNum from "@/services/validaciones.js";
 /* eslint-disable */
 export default {
   name: "Login",
-//   props: {
-//     msg: String,
-//   },
+  data(){
+    return {
+      username: '',
+      error: false,
+    }
+  },
+  // ---- Traigo los datos de vuex para comprobar que este bien
+  // computed: {
+  //   datosVuex() {
+  //     return this.$store.state.username;
+  //   }
+  // },
+  methods: {
+    guardarUsuario(){
+      if(validarStringAlfaNum(this.username))
+      {
+        this.error = false
+        this.$store.commit('guardarUsername', this.username);
+      }
+      else{
+        this.error = true
+      }
+    }
+  }
 };
 </script>
 
