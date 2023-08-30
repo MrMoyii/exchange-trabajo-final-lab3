@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <!-- v-if -->
-  </div>
-  <div>
-    <!-- v-else -->
+  <div v-if="this.$store.state.username == ''"></div>
+  <div v-else>
     <nav>
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
