@@ -1,8 +1,15 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <div>
+    <!-- v-if -->
+  </div>
+  <div>
+    <!-- v-else -->
+    <nav>
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>
+    </nav>
+  </div>
+
   <router-view />
 </template>
 
