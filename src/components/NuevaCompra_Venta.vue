@@ -11,14 +11,43 @@
           </select>
           <div class="arrow">▼</div>
         </div>
-        <!-- <input
-          class="btn"
-          type="submit"
-          value="mostrar"
-          @click="mostrar"
-          onsubmit="return false"
-        /> -->
-        <div></div>
+        <div>
+          <br v-if="compra_vent" />
+          <div class="select-wrapper" v-if="compra_vent">
+            <select id="coin" v-model="coin">
+              <option value="" disabled selected>Elige una cripto</option>
+              <option>BTC</option>
+              <option>DAI</option>
+              <option>ETH</option>
+              <option>BUSD</option>
+            </select>
+            <div class="arrow">▼</div>
+          </div>
+        </div>
+        <div>
+          <br v-if="coin" />
+          <div v-if="coin">
+            <input
+              type="number"
+              step="any"
+              name="numeroDecimal"
+              id="numeroDecimal"
+              placeholder="Ingresar monto"
+              v-model.number="cantidad_Compra_O_Venta"
+            />
+          </div>
+        </div>
+        <div>
+          <br v-if="cantidad_Compra_O_Venta" />
+          <input
+            v-if="cantidad_Compra_O_Venta"
+            class="btn"
+            type="submit"
+            value="Efectuar acción"
+            @click="AlmacenarCompraOVenta"
+            onsubmit="return false"
+          />
+        </div>
       </div>
     </div>
   </form>
@@ -30,12 +59,17 @@ export default {
   data() {
     return {
       compra_vent: "",
+      coin: "",
+      cantidad_Compra_O_Venta: null,
     };
   },
   methods: {
-    // mostrar() {
-    //   console.log(this.compra_vent);
-    // },
+    mostrar() {
+      console.log(this.compra_vent);
+    },
+    AlmacenarCompraOVenta() {
+      //almacenar en vuex? no estoy seguro je, tal vez sea el sueño
+    },
   },
 };
 </script>
@@ -43,11 +77,15 @@ export default {
 <style>
 .cuerpo {
   font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  background-image: url("../assets/toro-oso.jpeg");
+  background-size: cover;
+  background-repeat: round;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 97.5vh;
+  width: auto;
   margin: 0;
 }
 
@@ -86,5 +124,17 @@ select:focus {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
+}
+
+#numeroDecimal {
+  appearance: none;
+  padding: 7px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  width: 185px;
+  height: 25px;
+  cursor: pointer;
 }
 </style>
