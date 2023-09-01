@@ -1,22 +1,42 @@
 <template>
-  <div class="cuerpo">
-    <div class="container">
-      <h2>Seleccionar Compra o Venta</h2>
-      <div class="select-wrapper">
-        <select>
-          <option value="" disabled selected>Elige una opción</option>
-          <option value="compra">Compra</option>
-          <option value="venta">Venta</option>
-        </select>
-        <div class="arrow">▼</div>
+  <form @submit.prevent="onSubmit">
+    <div class="cuerpo">
+      <div class="container">
+        <h2>Seleccionar Compra o Venta</h2>
+        <div class="select-wrapper">
+          <select id="compra_venta" v-model="compra_vent">
+            <option value="" disabled selected>Elige una opción</option>
+            <option>Compra</option>
+            <option>Venta</option>
+          </select>
+          <div class="arrow">▼</div>
+        </div>
+        <!-- <input
+          class="btn"
+          type="submit"
+          value="mostrar"
+          @click="mostrar"
+          onsubmit="return false"
+        /> -->
+        <div></div>
       </div>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
 export default {
   name: "NuevaCompra-Venta",
+  data() {
+    return {
+      compra_vent: "",
+    };
+  },
+  methods: {
+    // mostrar() {
+    //   console.log(this.compra_vent);
+    // },
+  },
 };
 </script>
 
