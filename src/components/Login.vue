@@ -13,7 +13,7 @@
             required
           />
           <p v-show="error" class="error">
-            El Usuario debe tener letras y numeros
+            El usuario debe tener letras y numeros
           </p>
         </div>
         <input
@@ -62,6 +62,10 @@ export default {
 </script>
 
 <style scoped>
+  .error {
+    color: #d02323;
+  }
+
   .cuerpo {
     font-family: Arial, sans-serif;
     margin: 0;
