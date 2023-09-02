@@ -1,59 +1,61 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <div class="cuerpo">
-      <div class="container">
-        <h2>Seleccionar Compra o Venta</h2>
-        <div class="select-wrapper">
-          <select id="compra_venta" v-model="compra_vent">
-            <option value="" disabled selected>Elige una opción</option>
-            <option>Compra</option>
-            <option>Venta</option>
+    <div class="container">
+      <h2>Seleccionar Compra o Venta</h2>
+      <div class="select-wrapper">
+        <select id="compra_venta" v-model="compra_vent">
+          <option value="" disabled selected>Elige una opción</option>
+          <option>Compra</option>
+          <option>Venta</option>
+        </select>
+        <div class="arrow">▼</div>
+      </div>
+      <div>
+        <br v-if="compra_vent" />
+        <div class="select-wrapper" v-if="compra_vent">
+          <select id="coin" v-model="coin">
+            <option value="" disabled selected>Elige una cripto</option>
+            <option>BTC</option>
+            <option>DAI</option>
+            <option>ETH</option>
+            <option>BUSD</option>
           </select>
           <div class="arrow">▼</div>
         </div>
-        <div>
-          <br v-if="compra_vent" />
-          <div class="select-wrapper" v-if="compra_vent">
-            <select id="coin" v-model="coin">
-              <option value="" disabled selected>Elige una cripto</option>
-              <option>BTC</option>
-              <option>DAI</option>
-              <option>ETH</option>
-              <option>BUSD</option>
-            </select>
-            <div class="arrow">▼</div>
-          </div>
-        </div>
-        <div>
-          <br v-if="coin" />
-          <div v-if="coin">
-            <input
-              type="number"
-              step="any"
-              name="numeroDecimal"
-              id="numeroDecimal"
-              placeholder="Ingresar monto"
-              v-model.number="cantidad_Compra_O_Venta"
-            />
-          </div>
-        </div>
-        <div>
-          <br v-if="cantidad_Compra_O_Venta" />
+      </div>
+      <div>
+        <br v-if="coin" />
+        <div v-if="coin">
           <input
-            v-if="cantidad_Compra_O_Venta"
-            class="btn"
-            type="submit"
-            value="Efectuar acción"
-            @click="AlmacenarCompraOVenta"
-            onsubmit="return false"
+            type="number"
+            step="any"
+            name="numeroDecimal"
+            id="numeroDecimal"
+            placeholder="Ingresar monto"
+            v-model.number="cantidad_Compra_O_Venta"
           />
         </div>
+      </div>
+      <div v-if="cantidad_Compra_O_Venta">
+        <br />
+        <DatosCompraVenta></DatosCompraVenta>
+      </div>
+      <div v-if="cantidad_Compra_O_Venta">
+        <br />
+        <input
+          class="btn"
+          type="submit"
+          :value="btnValue"
+          @click="AlmacenarCompraOVenta"
+          onsubmit="return false"
+        />
       </div>
     </div>
   </form>
 </template>
 
 <script>
+import DatosCompraVenta from "@/components/DatosCompra_Venta.vue";
 export default {
   name: "NuevaCompra-Venta",
   data() {
@@ -62,6 +64,14 @@ export default {
       coin: "",
       cantidad_Compra_O_Venta: null,
     };
+  },
+  components: {
+    DatosCompraVenta,
+  },
+  computed: {
+    btnValue() {
+      return "Efectuar " + this.compra_vent;
+    },
   },
   methods: {
     mostrar() {
@@ -75,20 +85,6 @@ export default {
 </script>
 
 <style scoped>
-.cuerpo {
-  font-family: Arial, sans-serif;
-  /* background-color: #f5f5f5; */
-  background-image: url("../assets/toro-oso.jpeg");
-  background-size: cover;
-  background-repeat: round;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 97.5vh;
-  width: auto;
-  margin: 0;
-}
-
 .container {
   background-color: #fff;
   padding: 20px;
