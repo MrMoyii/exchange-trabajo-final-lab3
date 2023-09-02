@@ -74,7 +74,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .cuerpo {
   font-family: Arial, sans-serif;
   /* background-color: #f5f5f5; */
@@ -136,5 +136,15 @@ select:focus {
   width: 185px;
   height: 25px;
   cursor: pointer;
+}
+
+.btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
 }
 </style>
