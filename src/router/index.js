@@ -6,11 +6,13 @@ const routes = [
   {
     path: "/",
     name: "login",
+    props: true,
     component: LoginView,
   },
   {
     path: "/compra_venta",
     name: "compra_venta",
+    props: true,
     component: Compra_Venta,
   },
 ];

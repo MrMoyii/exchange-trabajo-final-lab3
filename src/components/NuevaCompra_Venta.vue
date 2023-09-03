@@ -10,33 +10,32 @@
         </select>
         <div class="arrow">▼</div>
       </div>
-      <div>
-        <br v-if="compra_vent" />
-        <div class="select-wrapper" v-if="compra_vent">
+      <div v-if="compra_vent">
+        <br />
+        <div class="select-wrapper">
           <select id="coin" v-model="coin">
             <option value="" disabled selected>Elige una cripto</option>
             <option>BTC</option>
             <option>DAI</option>
             <option>ETH</option>
-            <option>BUSD</option>
+            <option>USDT</option>
           </select>
           <div class="arrow">▼</div>
         </div>
       </div>
-      <div>
-        <br v-if="coin" />
-        <div v-if="coin">
-          <input
-            type="number"
-            step="any"
-            name="numeroDecimal"
-            id="numeroDecimal"
-            placeholder="Ingresar monto"
-            v-model.number="cantidad_Compra_O_Venta"
-          />
-        </div>
+      <div v-if="coin">
+        <br />
+        <input
+          type="number"
+          step="any"
+          name="numeroDecimal"
+          id="numeroDecimal"
+          placeholder="Ingresar monto"
+          v-model.number="cantidad_Compra_O_Venta"
+        />
       </div>
       <div v-if="cantidad_Compra_O_Venta">
+        {{ mandar }}
         <br />
         <DatosCompraVenta></DatosCompraVenta>
       </div>
@@ -55,6 +54,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import DatosCompraVenta from "@/components/DatosCompra_Venta.vue";
 export default {
   name: "NuevaCompra-Venta",
@@ -72,11 +72,14 @@ export default {
     btnValue() {
       return "Efectuar " + this.compra_vent;
     },
+    mandar() {
+      //guardo en el state de criptoYA la coin seleccionada
+      //porque no podia pasarla por parametros nc why
+      this.$store.commit('criptoYa/SetCoin', this.coin);
+      return "";
+    },
   },
   methods: {
-    mostrar() {
-      console.log(this.compra_vent);
-    },
     AlmacenarCompraOVenta() {
       //almacenar en vuex? no estoy seguro je, tal vez sea el sueño
     },
