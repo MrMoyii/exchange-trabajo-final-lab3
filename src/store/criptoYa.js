@@ -5,6 +5,7 @@ export default {
   state: {
     coinElegida: "",
     precios: [],
+    montoIngresado: null,
   },
   getters: {
     datosAPI(state) {
@@ -13,6 +14,9 @@ export default {
     getCoin(state) {
       return state.coinElegida;
     },
+    getMonto(state) {
+      return state.montoIngresado;
+    },
   },
   mutations: {
     SetPrecios(state, precios) {
@@ -20,6 +24,9 @@ export default {
     },
     SetCoin(state, coin) {
       state.coinElegida = coin;
+    },
+    SetMontoIgresado(state, monto) {
+      state.montoIngresado = monto;
     },
   },
   actions: {

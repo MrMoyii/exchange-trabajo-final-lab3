@@ -27,19 +27,20 @@
         <br />
         <input
           type="number"
-          step="any"
+          min="0"
+          step="0.01"
           name="numeroDecimal"
           id="numeroDecimal"
           placeholder="Ingresar monto"
           v-model.number="cantidad_Compra_O_Venta"
         />
       </div>
-      <div v-if="cantidad_Compra_O_Venta">
+      <div v-if="montoPermitido">
         {{ mandar }}
         <br />
         <DatosCompraVenta></DatosCompraVenta>
       </div>
-      <div v-if="cantidad_Compra_O_Venta">
+      <div v-if="montoPermitido">
         <br />
         <input
           class="btn"
@@ -69,13 +70,17 @@ export default {
     DatosCompraVenta,
   },
   computed: {
+    montoPermitido() {
+      return this.cantidad_Compra_O_Venta > 0;
+    },
     btnValue() {
       return "Efectuar " + this.compra_vent;
     },
     mandar() {
-      //guardo en el state de criptoYA la coin seleccionada
+      //guardo en el state de criptoYA la coin seleccionada y el monto
       //porque no podia pasarla por parametros nc why
       this.$store.commit('criptoYa/SetCoin', this.coin);
+      this.$store.commit('criptoYa/SetMontoIgresado', this.cantidad_Compra_O_Venta);
       return "";
     },
   },
@@ -145,5 +150,9 @@ select:focus {
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
+}
+
+.btn:hover {
+  background-color: #0056b3;
 }
 </style>
