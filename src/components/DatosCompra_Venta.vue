@@ -16,9 +16,9 @@ export default {
   name: "DatosCompraVenta",
   data() {
     return {
-      //recibir a travez de criptoYaAPi los valores de las cripto
-      datosCriptoYa: null,
       monto: null,
+      precio: null,
+      fecha: "",
     };
   },
   methods: {
@@ -26,21 +26,29 @@ export default {
   },
   computed: {
     //llamo a los getter para tener acceso a los datos de la store de criptoYa
-    ...mapGetters("criptoYa", ["getCoin", "datosAPI", "getMonto"]),
+    ...mapGetters("criptoYa", ["getCoin", "getPrecio", "getMonto"]),
 
     accionesIniciales(){
       this.consultarAPI(this.getCoin);//le paso por parametro el coin del state de criptoYa
       this.monto = this.getMonto;
     },
     FechaActual() {
-      return obtenerFechaActual();
+      this.fecha = obtenerFechaActual();
+
+      //guardo en vuex la fecha para luego obtenerla y hacer el post
+      this.$store.commit('criptoYa/SetFecha', this.fecha);
+
+      return this.fecha;
     },
     infoAccion() {
       return `${this.monto} ${this.getCoin} = `;
     },
     calcularPrecio() {
-      let precio = (this.datosAPI.totalAsk * this.monto).toFixed(2);
-      return `$${precio} ARS`;
+      this.precio = (this.getPrecio.totalAsk * this.monto).toFixed(2);
+
+      this.$store.commit('criptoYa/SetMontoAPagar_Vender', this.precio);
+
+      return `$${this.precio} ARS`;
     },
   }
 }

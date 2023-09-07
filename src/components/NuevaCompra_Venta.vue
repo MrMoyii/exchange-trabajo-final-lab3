@@ -11,6 +11,7 @@
         <div class="arrow">▼</div>
       </div>
       <div v-if="compra_vent">
+        {{ compraOVenta }}
         <br />
         <div class="select-wrapper">
           <select id="coin" v-model="coin">
@@ -46,7 +47,7 @@
           class="btn"
           type="submit"
           :value="btnValue"
-          @click="AlmacenarCompraOVenta"
+          @click="SolicitarOperacion"
           onsubmit="return false"
         />
       </div>
@@ -57,6 +58,8 @@
 <script>
 /* eslint-disable */
 import DatosCompraVenta from "@/components/DatosCompra_Venta.vue";
+import { mapGetters } from "vuex";
+
 export default {
   name: "NuevaCompra-Venta",
   data() {
@@ -64,12 +67,14 @@ export default {
       compra_vent: "",
       coin: "",
       cantidad_Compra_O_Venta: null,
+      purchaseORSale: "",
     };
   },
   components: {
     DatosCompraVenta,
   },
   computed: {
+    ...mapGetters("criptoYa", ["getCoin", "getPrecio", "getMonto", "getMontoAPagar_Vender", "getFecha"]),
     montoPermitido() {
       return this.cantidad_Compra_O_Venta > 0;
     },
@@ -83,10 +88,31 @@ export default {
       this.$store.commit('criptoYa/SetMontoIgresado', this.cantidad_Compra_O_Venta);
       return "";
     },
+    compraOVenta(){
+      this.purchaseORSale = this.compra_vent == "Compra" ? "purchase" : "sale";
+    }
   },
   methods: {
-    AlmacenarCompraOVenta() {
-      //almacenar en vuex? no estoy seguro je, tal vez sea el sueño
+    SolicitarOperacion() {
+      const requestBody = {
+        user_id: this.$store.username,
+        action: this.purchaseORSale,
+        crypto_code: this.getCoin,
+        crypto_amount: this.getMonto,
+        money: this.getMontoAPagar_Vender,
+        datetime: this.getFecha,
+      };
+
+      console.log(requestBody);
+
+      // Llama a la acción de Vuex para enviar la solicitud POST
+      // this.$store.dispatch('crypto/enviarDatos', requestBody)
+      //   .then(() => {
+      //     // Realiza acciones adicionales después de enviar la solicitud
+      //   })
+      //   .catch((error) => {
+      //     console.error('Error al enviar la solicitud POST:', error);
+      //   });
     },
   },
 };
