@@ -2,7 +2,7 @@
   <div class="cuerpo">
     <div class="container">
       <h2>Iniciar Sesión</h2>
-      <form @submit.prevent="onSubmit">
+      <form @submit.prevent="guardarUsuario">
         <div class="input-group">
           <label for="username">Usuario</label>
           <input
@@ -16,22 +16,18 @@
             El usuario debe tener letras y numeros
           </p>
         </div>
-        <input
-          class="btn"
-          type="submit"
-          value="Iniciar Sesión"
-          @click="guardarUsuario"
-          onsubmit="return false"
-        />
-        <!-- <p>{{ datosVuex }}</p>  solo para ver que este bien  -->
+        <input class="btn" type="submit" value="Iniciar Sesión" />
+        <!-- solo para ver que este bien  -->
+        <!-- <p>{{ datosVuex }}</p> -->
       </form>
     </div>
   </div>
 </template>
 
 <script>
-import validarStringAlfaNum from "@/services/validaciones.js";
 /* eslint-disable */
+import validarStringAlfaNum from "@/services/validaciones.js";
+import swal from 'sweetalert';
 export default {
   name: "Login",
   data(){
@@ -50,12 +46,12 @@ export default {
     guardarUsuario(){
       if(validarStringAlfaNum(this.username))
       {
+        swal("Registrado",{icon: "success", buttons: false,});
         this.error = false
         this.$store.commit('guardarUsername', this.username);
+        this.$router.push('compra_venta');
       }
-      else{
-        this.error = true
-      }
+      else this.error = true
     }
   }
 };
