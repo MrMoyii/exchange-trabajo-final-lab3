@@ -3,7 +3,7 @@
     {{ accionesIniciales }}
     <h3>Datos de la acción</h3>
     <p>{{ infoAccion + calcularPrecio }}</p>
-    <p>{{ FechaActual }}</p>
+    <p>{{ fechaActual }}</p>
   </div>
 </template>
 
@@ -32,7 +32,7 @@ export default {
       this.consultarAPI(this.getCoin);//le paso por parametro el coin del state de criptoYa
       this.monto = this.getMonto;
     },
-    FechaActual() {
+    fechaActual() {
       this.fecha = obtenerFechaActual();
 
       //guardo en vuex la fecha para luego obtenerla y hacer el post
