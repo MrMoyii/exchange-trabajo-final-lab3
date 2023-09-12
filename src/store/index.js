@@ -11,23 +11,47 @@ const apiTransacciones = axios.create({
 export default createStore({
   state: {
     username: "",
-    compra_venta: [],
+    cartera: [
+      { id: 0, name: "Bitcoin", symbol: "BTC", amount: 0, sales: 0, purchases: 0, amountInMoney: 0, result: 0 },
+      { id: 1, name: "DAI", symbol: "DAI", amount: 0, sales: 0, purchases: 0, amountInMoney: 0, result: 0 },
+      { id: 3, name: "Ethereum", symbol: "ETH", amount: 0, sales: 0, purchases: 0, amountInMoney: 0, result: 0 },
+      { id: 4, name: "Theter", symbol: "USDT", amount: 0, sales: 0, purchases: 0, amountInMoney: 0, result: 0 },
+    ],
+    historial: [],
+    cargaCompleta: false,
   },
   mutations: {
     guardarUsername(state, username) {
       state.username = username;
     },
-    registrarAcciones(state, data) {
-      state.compra_venta.push(data)
+    guardarEnCartera(state, data) {
+      state.cartera.find(x => x.symbol === data.crypto_code).sales += parseFloat(data.money);
+      state.cartera.find(x => x.symbol === data.crypto_code).amount -= parseFloat(data.crypto_amount);
+    },
+    guardarHistorial(state, data) {
+      state.historial.push(data);
     }
   },
   actions: {
     async postDatos({ commit }, payload) {
       try {
-        const response = await apiTransacciones.post("transactions", payload);
-        commit("registrarAcciones", response.data);
+        const respuesta = await apiTransacciones.post('transactions', payload);
+        console.log(respuesta.data);
+
+        const transaccionRegistrada = {
+          "_id": respuesta.data["_id"],
+          "crypto_code": respuesta.data["crypto_code"],
+          "crypto_amount": respuesta.data["crypto_amount"],
+          "user_id": respuesta.data["user_id"],
+          "action": respuesta.data["action"],
+          "datetime": respuesta.data["datetime"],
+          "money": respuesta.data["money"],
+        }
+        
+        commit("guardarHistorial", transaccionRegistrada);
+        commit("guardarEnCartera", payload);
       } catch (error) {
-        console.error("Error al enviar la solicitud POST:", error);
+        console.error("Error al enviar la solicitud POST...:", error);
       }
     },
   },

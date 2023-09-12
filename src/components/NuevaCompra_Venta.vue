@@ -1,5 +1,6 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <Loader v-if="componenteCarga"></Loader>
+  <form v-else @submit.prevent="SolicitarOperacion">
     <div class="container">
       <h2>Seleccionar Compra o Venta</h2>
       <div class="select-wrapper">
@@ -29,7 +30,7 @@
         <input
           type="number"
           min="0"
-          step="0.01"
+          step="any"
           name="numeroDecimal"
           id="numeroDecimal"
           placeholder="Ingresar monto"
@@ -37,19 +38,13 @@
         />
       </div>
       <div v-if="montoPermitido">
-        {{ mandar }}
+        {{ mandarCoinYCantidad }}
         <br />
         <DatosCompraVenta></DatosCompraVenta>
       </div>
       <div v-if="montoPermitido">
         <br />
-        <input
-          class="btn"
-          type="submit"
-          :value="btnValue"
-          @click="SolicitarOperacion"
-          onsubmit="return false"
-        />
+        <input class="btn" type="submit" :value="btnValue" />
       </div>
     </div>
   </form>
@@ -58,7 +53,9 @@
 <script>
 /* eslint-disable */
 import DatosCompraVenta from "@/components/DatosCompra_Venta.vue";
+import Loader from "@/components/Loader.vue";
 import { mapGetters } from "vuex";
+import swal from 'sweetalert';
 
 export default {
   name: "NuevaCompra-Venta",
@@ -68,20 +65,33 @@ export default {
       coin: "",
       cantidad_Compra_O_Venta: null,
       purchaseORSale: "",
+      componenteCarga: false,
     };
   },
   components: {
     DatosCompraVenta,
+    Loader,
   },
   computed: {
     ...mapGetters("criptoYa", ["getCoin", "getPrecio", "getMonto", "getMontoAPagar_Vender", "getFecha"]),
     montoPermitido() {
       return this.cantidad_Compra_O_Venta > 0;
     },
+    //---------------TO-DO---------------//
+    // montoVentaPermitido() {
+    //   let montoCriptoAVender = this.$store.state.criptos;
+    //   montoCriptoAVender.forEach(x => {
+    //     if(x.crypto_code == coin){
+    //     }
+    //   });
+    //   // if(montoCriptoAVender > )
+    //   return 0;
+    // },
+    //---------------TO-DO---------------//
     btnValue() {
       return "Efectuar " + this.compra_vent;
     },
-    mandar() {
+    mandarCoinYCantidad() {
       //guardo en el state de criptoYA la coin seleccionada y el monto
       //porque no podia pasarla por parametros nc why
       this.$store.commit('criptoYa/SetCoin', this.coin);
@@ -95,24 +105,21 @@ export default {
   methods: {
     SolicitarOperacion() {
       const requestBody = {
-        user_id: this.$store.username,
+        user_id: this.$store.state.username,
         action: this.purchaseORSale,
         crypto_code: this.getCoin,
         crypto_amount: this.getMonto,
         money: this.getMontoAPagar_Vender,
         datetime: this.getFecha,
       };
-
-      console.log(requestBody);
-
+      
+      this.componenteCarga = true;
       // Llama a la acción de Vuex para enviar la solicitud POST
-      // this.$store.dispatch('crypto/enviarDatos', requestBody)
-      //   .then(() => {
-      //     // Realiza acciones adicionales después de enviar la solicitud
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error al enviar la solicitud POST:', error);
-      //   });
+      this.$store.dispatch('postDatos', requestBody)
+        .then(() => {
+          this.componenteCarga = false;
+          swal("Transacción exitosa",{icon: "success", buttons: false,});
+        });
     },
   },
 };
