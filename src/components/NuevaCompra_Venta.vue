@@ -42,7 +42,17 @@
         <br />
         <DatosCompraVenta></DatosCompraVenta>
       </div>
-      <div v-if="montoPermitido">
+      <div v-show="error && this.compra_vent == 'Venta'">
+        <br />
+        <p class="error">
+          No cuenta con fondos suficientes para efectuar la venta
+        </p>
+      </div>
+      <div v-if="montoPermitido && this.compra_vent == 'Compra'">
+        <br />
+        <input class="btn" type="submit" :value="btnValue" />
+      </div>
+      <div v-if="montoPermitido && montoVentaValido">
         <br />
         <input class="btn" type="submit" :value="btnValue" />
       </div>
@@ -66,6 +76,7 @@ export default {
       cantidad_Compra_O_Venta: null,
       purchaseORSale: "",
       componenteCarga: false,
+      error: false,
     };
   },
   components: {
@@ -77,17 +88,23 @@ export default {
     montoPermitido() {
       return this.cantidad_Compra_O_Venta > 0;
     },
-    //---------------TO-DO---------------//
-    // montoVentaPermitido() {
-    //   let montoCriptoAVender = this.$store.state.criptos;
-    //   montoCriptoAVender.forEach(x => {
-    //     if(x.crypto_code == coin){
-    //     }
-    //   });
-    //   // if(montoCriptoAVender > )
-    //   return 0;
-    // },
-    //---------------TO-DO---------------//
+    montoVentaValido() {
+      if(this.compra_vent == "Venta"){
+        //consulto en la cartera
+        let cartera = this.$store.state.cartera;
+        //busco en la cartera si se escunetra un objeto que coincida con la coin seleccionada
+        let coinEncontrada = cartera.find(x => x.symbol === this.coin);
+        //si la cantidad ingresada no es mayor a la guardada se puede comprar
+        if(coinEncontrada.amount >= this.cantidad_Compra_O_Venta) {
+          this.error = false;
+          return true;
+        }
+        else {
+          this.error = true;
+          return false;
+        }
+      }
+    },
     btnValue() {
       return "Efectuar " + this.compra_vent;
     },
@@ -187,5 +204,10 @@ select:focus {
 
 .btn:hover {
   background-color: #0056b3;
+}
+
+.error {
+  color: #d02323;
+  max-width: 322px;
 }
 </style>

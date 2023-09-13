@@ -24,7 +24,11 @@ export default createStore({
     guardarUsername(state, username) {
       state.username = username;
     },
-    guardarEnCartera(state, data) {
+    guardarCompra(state, data) {
+      state.cartera.find(x => x.symbol === data.crypto_code).purchases += parseFloat(data.money);
+      state.cartera.find(x => x.symbol === data.crypto_code).amount += parseFloat(data.crypto_amount);
+    },
+    guardarVenta(state, data) {
       state.cartera.find(x => x.symbol === data.crypto_code).sales += parseFloat(data.money);
       state.cartera.find(x => x.symbol === data.crypto_code).amount -= parseFloat(data.crypto_amount);
     },
@@ -48,8 +52,15 @@ export default createStore({
           "money": respuesta.data["money"],
         }
         
+        //llamo a la mutacion dependiendo si es compra o venta
+        if(payload.action == "purchase") {
+          commit("guardarCompra", payload);
+        }
+        else if(payload.action == "sale") {
+          commit("guardarVenta", payload);
+        }
+        else console.log("Ocurrio un error al guarsdar la compra o venta.")
         commit("guardarHistorial", transaccionRegistrada);
-        commit("guardarEnCartera", payload);
       } catch (error) {
         console.error("Error al enviar la solicitud POST...:", error);
       }
