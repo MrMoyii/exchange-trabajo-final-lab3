@@ -4,14 +4,14 @@
     <div class="container">
       <h2>Seleccionar Compra o Venta</h2>
       <div class="select-wrapper">
-        <select id="compra_venta" v-model="compra_vent">
+        <select id="acciona" v-model="accion">
           <option value="" disabled selected>Elige una opción</option>
           <option>Compra</option>
           <option>Venta</option>
         </select>
         <div class="arrow">▼</div>
       </div>
-      <div v-if="compra_vent">
+      <div v-if="accion">
         {{ compraOVenta }}
         <br />
         <div class="select-wrapper">
@@ -42,19 +42,21 @@
         <br />
         <DatosCompraVenta></DatosCompraVenta>
       </div>
-      <div v-show="error && this.compra_vent == 'Venta'">
+      <div v-show="this.error && this.accion == 'Venta'">
         <br />
         <p class="error">
           No cuenta con fondos suficientes para efectuar la venta
         </p>
       </div>
-      <div v-if="montoPermitido && this.compra_vent == 'Compra'">
-        <br />
-        <input class="btn" type="submit" :value="btnValue" />
-      </div>
-      <div v-if="montoPermitido && montoVentaValido">
-        <br />
-        <input class="btn" type="submit" :value="btnValue" />
+      <div v-if="this.$store.state.cargaCompleta">
+        <div v-if="montoPermitido && this.accion == 'Compra'">
+          <br />
+          <input class="btn" type="submit" :value="btnValue" />
+        </div>
+        <div v-if="montoPermitido && montoVentaValido">
+          <br />
+          <input class="btn" type="submit" :value="btnValue" />
+        </div>
       </div>
     </div>
   </form>
@@ -71,7 +73,7 @@ export default {
   name: "NuevaCompra-Venta",
   data() {
     return {
-      compra_vent: "",
+      accion: "",
       coin: "",
       cantidad_Compra_O_Venta: null,
       purchaseORSale: "",
@@ -89,7 +91,7 @@ export default {
       return this.cantidad_Compra_O_Venta > 0;
     },
     montoVentaValido() {
-      if(this.compra_vent == "Venta"){
+      if(this.accion == "Venta"){
         //consulto en la cartera
         let cartera = this.$store.state.cartera;
         //busco en la cartera si se escunetra un objeto que coincida con la coin seleccionada
@@ -106,7 +108,7 @@ export default {
       }
     },
     btnValue() {
-      return "Efectuar " + this.compra_vent;
+      return "Efectuar " + this.accion;
     },
     mandarCoinYCantidad() {
       //guardo en el state de criptoYA la coin seleccionada y el monto
@@ -116,7 +118,7 @@ export default {
       return "";
     },
     compraOVenta(){
-      this.purchaseORSale = this.compra_vent == "Compra" ? "purchase" : "sale";
+      this.purchaseORSale = this.accion == "Compra" ? "purchase" : "sale";
     }
   },
   methods: {
@@ -132,7 +134,7 @@ export default {
       
       this.componenteCarga = true;
       // Llama a la acción de Vuex para enviar la solicitud POST
-      this.$store.dispatch('postDatos', requestBody)
+      this.$store.dispatch('PostDatos', requestBody)
         .then(() => {
           this.componenteCarga = false;
           swal("Transacción exitosa",{icon: "success", buttons: false,});
@@ -147,7 +149,7 @@ export default {
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
 

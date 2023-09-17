@@ -70,7 +70,7 @@ export default {
     justify-content: center;
     align-items: center;
     min-height: 97.5vh;
-    background-color: #f0f0f0;
+    background-color: #e3e3e3;
   }
 
   .container {

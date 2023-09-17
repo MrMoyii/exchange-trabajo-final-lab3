@@ -18,8 +18,8 @@ export default {
 <style scoped>
 .cuerpo {
   font-family: Arial, sans-serif;
-  /* background-color: #f5f5f5; */
-  background-image: url("../assets/toro-oso.jpeg");
+  background-color: #e3e3e3;
+  /* background-image: url("../assets/toro-oso.jpeg"); */
   background-size: cover;
   background-repeat: round;
   display: flex;

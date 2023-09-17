@@ -1,7 +1,11 @@
 <template>
   <div v-if="this.$store.state.username == ''"></div>
   <div v-else>
-    <nav><router-link to="/">Home</router-link> |</nav>
+    <nav>
+      <router-link to="/">Login</router-link> |
+      <router-link to="/compra_venta">Compra/Venta</router-link> |
+      <router-link to="/movimientos">Movimientos</router-link> |
+    </nav>
   </div>
 
   <router-view />
@@ -26,6 +30,6 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #007bff;
 }
 </style>

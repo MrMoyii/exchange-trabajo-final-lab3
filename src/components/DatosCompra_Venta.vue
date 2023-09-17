@@ -1,6 +1,6 @@
 <template>
-  <div class="borde">
-    {{ accionesIniciales }}
+  {{ refrescar }}
+  <div class="borde" v-if="this.$store.state.cargaCompleta">
     <h3>Datos de la acción</h3>
     <p>{{ infoAccion + calcularPrecio }}</p>
     <p>{{ fechaActual }}</p>
@@ -28,8 +28,15 @@ export default {
     //llamo a los getter para tener acceso a los datos de la store de criptoYa
     ...mapGetters("criptoYa", ["getCoin", "getPrecio", "getMonto"]),
 
-    accionesIniciales(){
-      this.consultarAPI(this.getCoin);//le paso por parametro el coin del state de criptoYa
+    //Podria poner un mounted, pero solo traeria el precio de la coin al principio.
+    //Con la computed consulto a la api cada vez que cambie algo
+    //como por ejemplo una moneda y esta vuelve a ejecutar el codigo que esta dentro.
+    refrescar(){
+      //le paso por parametro el coin del state de criptoYa
+      this.$store.state.cargaCompleta = false;
+      this.consultarAPI().then(() => {
+        this.$store.state.cargaCompleta = true;
+      });
       this.monto = this.getMonto;
     },
     fechaActual() {

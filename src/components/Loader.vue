@@ -22,7 +22,7 @@ export default {
 .dot-spinner {
   --uib-size: 40px;
   --uib-speed: 0.9s;
-  --uib-color: #FFF;
+  --uib-color: #000000;
 
   position: relative;
   display: flex;

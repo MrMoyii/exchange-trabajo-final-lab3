@@ -44,10 +44,10 @@ export default {
     },
   },
   actions: {
-    async consultarAPI({ commit }, coin) {
+    async consultarAPI({ commit, state }) {
       try {
         const response = await axios.get(
-          `https://criptoya.com/api/argenbtc/${coin}/ars`
+          `https://criptoya.com/api/argenbtc/${state.coinElegida}/ars`
         );
         const precios = response.data;
         commit("SetPrecios", precios);
