@@ -10,7 +10,7 @@
 <script>
 /* eslint-disable */
 import { mapGetters, mapActions } from "vuex";
-import obtenerFechaActual from "@/services/obtenerFechaActual.js";
+import obtenerFechaActual from "@/tools/obtenerFechaActual.js";
 
 export default {
   name: "DatosCompraVenta",

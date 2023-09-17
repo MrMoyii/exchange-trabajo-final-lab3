@@ -11,17 +11,10 @@
           <th>Monto</th>
           <th>Ver/Editar/Eliminar</th>
         </tr>
-        <tr>
-          <td>btc</td>
-          <td>purchase</td>
-          <td>10/10/2000</td>
-          <td>0.001</td>
-          <td>$ 19.098</td>
-        </tr>
         <tr v-for="transaccion in dataHistorial" :key="transaccion.id">
           <td>{{ transaccion.crypto_code }}</td>
           <td>{{ transaccion.action }}</td>
-          <td>{{ transaccion.datetime }}</td>
+          <td>{{ formateoFecha(transaccion.datetime) }}</td>
           <td>{{ transaccion.crypto_amount }}</td>
           <td>$ {{ transaccion.money }}</td>
           <td class="buttons">
@@ -40,7 +33,8 @@
 <script>
 /* eslint-disable */
 import { mapGetters } from "vuex";
-import Loader from "@/components/Loader.vue"
+import Loader from "@/components/Loader.vue";
+import formateoFecha from "@/tools/formatearFecha.js";
 
 export default {
   name: "MovimientosComponent",
@@ -62,6 +56,7 @@ export default {
     });
   },
   methods: {
+    formateoFecha,
     algo() {
       console.log(this.$store.state.historial[0]);
     },
