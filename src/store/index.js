@@ -60,8 +60,6 @@ export default createStore({
     async GetHistorial({commit, state}) {
       const respuesta = await apiTransacciones.get(`/transactions?q={"user_id": "${state.username}"}`);
       commit("guardarHistorial", respuesta.data);
-
-      console.log(state.historial);
     },
     async BorrarPorID({commit, state}, id) {
       const respuesta = await apiTransacciones.delete(`/transactions/${id}}`);

@@ -6,6 +6,5 @@ export default function (fechaISO) {
   // Formatea la fecha en el formato deseado (DD/MM/YYYY HH:mm)
   const fechaFormateada = fechaMoment.format("DD/MM/YYYY HH:mm");
 
-  console.log(fechaFormateada); // Esto imprimirá la fecha en el formato deseado
   return fechaFormateada;
 }

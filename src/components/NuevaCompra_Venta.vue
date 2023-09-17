@@ -37,6 +37,12 @@
           v-model.number="cantidad_Compra_O_Venta"
         />
       </div>
+      <div
+        class="centrar"
+        v-if="!this.$store.state.cargaCompleta && montoPermitido"
+      >
+        <Loader></Loader>
+      </div>
       <div v-if="montoPermitido">
         {{ mandarCoinYCantidad }}
         <br />
@@ -145,6 +151,15 @@ export default {
 </script>
 
 <style scoped>
+.centrar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-top: 20px;
+  height: 120px;
+}
+
 .container {
   background-color: #fff;
   padding: 20px;

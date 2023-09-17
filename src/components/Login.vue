@@ -26,7 +26,7 @@
 
 <script>
 /* eslint-disable */
-import validarStringAlfaNum from "@/services/validaciones.js";
+import validarStringAlfaNum from "@/tools/validaciones.js";
 import swal from 'sweetalert';
 export default {
   name: "Login",
