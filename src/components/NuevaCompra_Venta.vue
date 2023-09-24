@@ -91,6 +91,11 @@ export default {
     DatosCompraVenta,
     Loader,
   },
+  mounted() {
+    if(this.$store.state.username == ""){
+      this.$router.push("/")
+    }
+  },
   computed: {
     ...mapGetters("criptoYa", ["getCoin", "getPrecio", "getMonto", "getMontoAPagar_Vender", "getFecha"]),
     montoPermitido() {

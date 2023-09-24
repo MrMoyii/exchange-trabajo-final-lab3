@@ -1,7 +1,12 @@
 <template>
-  <Loader v-if="dataHistorial == null"></Loader>
+  <div v-if="datosHistorial == null">
+    <Loader></Loader>
+  </div>
+  <div v-if="estaHistorialVacio">
+    <h4>Historial Vacio</h4>
+  </div>
   <div class="cuerpo" v-else>
-    <div class="container" v-if="dataHistorial">
+    <div class="container" v-if="datosHistorial">
       <table class="tftable">
         <tr>
           <th>Moneda</th>
@@ -9,23 +14,22 @@
           <th>Fecha</th>
           <th>Cantidad</th>
           <th>Monto</th>
-          <th>Ver/Editar/Eliminar</th>
+          <th>Ver/Editar/Borrar</th>
         </tr>
-        <tr v-for="transaccion in dataHistorial" :key="transaccion.id">
+        <tr v-for="transaccion in datosHistorial" :key="transaccion.id">
           <td>{{ transaccion.crypto_code }}</td>
           <td>{{ transaccion.action }}</td>
           <td>{{ formateoFecha(transaccion.datetime) }}</td>
           <td>{{ transaccion.crypto_amount }}</td>
           <td>$ {{ transaccion.money }}</td>
-          <td class="buttons">
-            <button class="btn" @click="Borrar(transaccion._id)">Ver</button>
-            <button class="btn" @click="Borrar(transaccion._id)">Editar</button>
+          <!---------------todo--------------->
+          <td>
+            <button class="btn" @click="Ver(transaccion)">Ver</button>
+            <button class="btn" @click="Editar(transaccion)">Editar</button>
             <button class="btn" @click="Borrar(transaccion._id)">Borrar</button>
-            <!-- <button @click="openEditModal(getMovementToEdit(transaccion._id, false))">Editar</button>
-            <button @click="deleteMovement(transaccion._id)">Eliminar</button> -->
           </td>
+          <!---------------todo--------------->
         </tr>
-        <input type="submit" @click="algo" />
       </table>
     </div>
   </div>
@@ -40,7 +44,8 @@ export default {
   name: "MovimientosComponent",
   data() {
     return {
-      dataHistorial: null,
+      datosHistorial: null,
+      estaHistorialVacio: false,
     }
   },
   components: {
@@ -50,19 +55,36 @@ export default {
     ...mapGetters(["getHistorial"]),
   },
   mounted() {
-    this.$store.dispatch("GetHistorial")
-    .then(() => {
-      this.dataHistorial = this.$store.state.historial;
-    });
+    if(this.$store.state.username == ""){
+      this.$router.push("/")
+    }
+    else this.ObtenerHistorial();
   },
   methods: {
     formateoFecha,
-    algo() {
-      console.log(this.$store.state.historial[0]);
+    Ver(id){
+      // this.$store.dispatch("BorrarPorID", id);
+    },
+    Editar(id){
+      // this.$store.dispatch("BorrarPorID", id);
     },
     Borrar(id){
-      this.$store.dispatch("BorrarPorID", id);
+      this.datosHistorial = null;
+      this.$store.dispatch("BorrarPorID", id)
+      .then(() => {
+        this.ObtenerHistorial();
+      });
     },
+    ObtenerHistorial(){
+      this.datosHistorial = null;
+      this.estaHistorialVacio = false;
+      this.$store.dispatch("GetHistorial")
+      .then(() => {
+        if(this.$store.state.historial.length < 1)
+          this.estaHistorialVacio = true;
+        this.datosHistorial = this.$store.state.historial;
+      });
+    }
   }
 };
 </script>

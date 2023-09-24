@@ -37,7 +37,7 @@ export default createStore({
       state.cartera.find(x => x.symbol === data.crypto_code).sales += parseFloat(data.money);
       state.cartera.find(x => x.symbol === data.crypto_code).amount -= parseFloat(data.crypto_amount);
     },
-    guardarHistorial(state, data) {
+    actualizarHistorial(state, data) {
       state.historial = data;
     }
   },
@@ -58,15 +58,19 @@ export default createStore({
       }
     },
     async GetHistorial({commit, state}) {
-      const respuesta = await apiTransacciones.get(`/transactions?q={"user_id": "${state.username}"}`);
-      commit("guardarHistorial", respuesta.data);
+      try {
+        const respuesta = await apiTransacciones.get(`/transactions?q={"user_id": "${state.username}"}`);
+        commit("actualizarHistorial", respuesta.data);
+      } catch (error) {
+        console.log("Error al obtener el historial del usuario...:", error)
+      }
     },
-    async BorrarPorID({commit, state}, id) {
-      const respuesta = await apiTransacciones.delete(`/transactions/${id}}`);
-      console.log(respuesta.data);
-      console.log(state.historial);
-      // commit("guardarHistorial", respuesta.data);
-
+    async BorrarPorID({commit}, id) {
+      try {
+        await apiTransacciones.delete(`/transactions/${id}`);
+      } catch (error) {
+        console.log("Error al enviar la solicitud DELETE...:", error)
+      }
     },
   },
   modules: {
