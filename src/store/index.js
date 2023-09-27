@@ -57,7 +57,7 @@ export default createStore({
         console.error("Error al enviar la solicitud POST...:", error);
       }
     },
-    async GetHistorial({commit, state}) {
+    async ObtenerHistorial({commit, state}) {
       try {
         const respuesta = await apiTransacciones.get(`/transactions?q={"user_id": "${state.username}"}`);
         commit("actualizarHistorial", respuesta.data);

@@ -2,6 +2,7 @@
   <Loader v-if="componenteCarga"></Loader>
   <form v-else @submit.prevent="SolicitarOperacion">
     <div class="container">
+      <!-- accion a realizar -->
       <h2>Seleccionar Compra o Venta</h2>
       <div class="select-wrapper">
         <select id="acciona" v-model="accion">
@@ -11,8 +12,9 @@
         </select>
         <div class="arrow">▼</div>
       </div>
+      <!-- seleccion de coin a comprar o vender -->
       <div v-if="accion">
-        {{ compraOVenta }}
+        {{ guardarAccionSeleccionada }}
         <br />
         <div class="select-wrapper">
           <select id="coin" v-model="coin">
@@ -25,6 +27,7 @@
           <div class="arrow">▼</div>
         </div>
       </div>
+      <!-- monto a ingresar -->
       <div v-if="coin">
         <br />
         <input
@@ -34,32 +37,36 @@
           name="numeroDecimal"
           id="numeroDecimal"
           placeholder="Ingresar monto"
-          v-model.number="cantidad_Compra_O_Venta"
+          v-model.number="montoIngresado"
         />
       </div>
+      <!-- muestra el componente Loader mientras carga el resumen -->
       <div
         class="centrar"
-        v-if="!this.$store.state.cargaCompleta && montoPermitido"
+        v-if="!this.$store.state.cargaCompleta && esMontoPermitido"
       >
         <Loader></Loader>
       </div>
-      <div v-if="montoPermitido">
+      <!-- muertra el resumen de la accion a realizar -->
+      <div v-if="esMontoPermitido">
         {{ mandarCoinYCantidad }}
         <br />
-        <DatosCompraVenta></DatosCompraVenta>
+        <Resumen></Resumen>
       </div>
-      <div v-show="this.error && this.accion == 'Venta'">
+      <!-- mensaje de error -->
+      <div v-show="this.errorVenta && this.accion == 'Venta'">
         <br />
         <p class="error">
           No cuenta con fondos suficientes para efectuar la venta
         </p>
       </div>
+      <!-- botones -->
       <div v-if="this.$store.state.cargaCompleta">
-        <div v-if="montoPermitido && this.accion == 'Compra'">
+        <div v-if="esMontoPermitido && this.accion == 'Compra'">
           <br />
           <input class="btn" type="submit" :value="btnValue" />
         </div>
-        <div v-if="montoPermitido && montoVentaValido">
+        <div v-if="esMontoPermitido && esMontoVentaValido">
           <br />
           <input class="btn" type="submit" :value="btnValue" />
         </div>
@@ -70,7 +77,7 @@
 
 <script>
 /* eslint-disable */
-import DatosCompraVenta from "@/components/DatosCompra_Venta.vue";
+import Resumen from "@/components/Resumen.vue";
 import Loader from "@/components/Loader.vue";
 import { mapGetters } from "vuex";
 import swal from 'sweetalert';
@@ -81,39 +88,42 @@ export default {
     return {
       accion: "",
       coin: "",
-      cantidad_Compra_O_Venta: null,
+      montoIngresado: null,
       purchaseORSale: "",
       componenteCarga: false,
-      error: false,
+      errorVenta: false,
     };
   },
   components: {
-    DatosCompraVenta,
+    Resumen,
     Loader,
   },
   mounted() {
     if(this.$store.state.username == ""){
       this.$router.push("/")
     }
+    else this.$store.dispatch("ObtenerHistorial");
   },
   computed: {
+    ...mapGetters(["getHistorial"]),
     ...mapGetters("criptoYa", ["getCoin", "getPrecio", "getMonto", "getMontoAPagar_Vender", "getFecha"]),
-    montoPermitido() {
-      return this.cantidad_Compra_O_Venta > 0;
+    
+    esMontoPermitido() {
+      return this.montoIngresado > 0;
     },
-    montoVentaValido() {
+    esMontoVentaValido() {
       if(this.accion == "Venta"){
-        //consulto en la cartera
-        let cartera = this.$store.state.cartera;
-        //busco en la cartera si se escunetra un objeto que coincida con la coin seleccionada
-        let coinEncontrada = cartera.find(x => x.symbol === this.coin);
-        //si la cantidad ingresada no es mayor a la guardada se puede comprar
-        if(coinEncontrada.amount >= this.cantidad_Compra_O_Venta) {
-          this.error = false;
+        //consulto el historial
+        let historial = this.getHistorial;
+        //busco si se escunetra un objeto que coincida con la coin seleccionada
+        let coinEncontrada = historial.find(x => x.crypto_code == this.coin);
+        //si la cantidad ingresada no es mayor a la guardada se puede vender
+        if(coinEncontrada.crypto_amount >= this.montoIngresado) {
+          this.errorVenta = false;
           return true;
         }
         else {
-          this.error = true;
+          this.errorVenta = true;
           return false;
         }
       }
@@ -125,10 +135,9 @@ export default {
       //guardo en el state de criptoYA la coin seleccionada y el monto
       //porque no podia pasarla por parametros nc why
       this.$store.commit('criptoYa/SetCoin', this.coin);
-      this.$store.commit('criptoYa/SetMontoIgresado', this.cantidad_Compra_O_Venta);
-      return "";
+      this.$store.commit('criptoYa/SetMontoIgresado', this.montoIngresado);
     },
-    compraOVenta(){
+    guardarAccionSeleccionada(){
       this.purchaseORSale = this.accion == "Compra" ? "purchase" : "sale";
     }
   },

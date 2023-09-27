@@ -78,11 +78,11 @@ export default {
     ObtenerHistorial(){
       this.datosHistorial = null;
       this.estaHistorialVacio = false;
-      this.$store.dispatch("GetHistorial")
+      this.$store.dispatch("ObtenerHistorial")
       .then(() => {
-        if(this.$store.state.historial.length < 1)
+        if(this.getHistorial.length < 1)
           this.estaHistorialVacio = true;
-        this.datosHistorial = this.$store.state.historial;
+        this.datosHistorial = this.getHistorial;
       });
     }
   }
