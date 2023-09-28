@@ -3,7 +3,7 @@
   <div v-else>
     <nav>
       <router-link to="/">Login</router-link> |
-      <router-link to="/compra_venta">Compra/Venta</router-link> |
+      <router-link to="/trade">Compra/Venta</router-link> |
       <router-link to="/movimientos">Movimientos</router-link> |
     </nav>
   </div>

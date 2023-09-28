@@ -49,7 +49,7 @@ export default {
         swal("Registrado",{icon: "success", buttons: false,});
         this.error = false
         this.$store.commit('guardarUsername', this.username);
-        this.$router.push('compra_venta');
+        this.$router.push('trade');
       }
       else this.error = true
     }

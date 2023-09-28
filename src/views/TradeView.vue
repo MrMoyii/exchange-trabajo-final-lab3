@@ -1,16 +1,16 @@
 <template>
   <div class="cuerpo">
-    <NuevaCompra_Venta />
+    <Trade />
   </div>
 </template>
 <script>
 // @ is an alias to /src
-import NuevaCompra_Venta from "@/components/NuevaCompra_Venta.vue";
+import Trade from "@/components/Trade.vue";
 
 export default {
-  name: "Compra_VentaView",
+  name: "TradeView",
   components: {
-    NuevaCompra_Venta,
+    Trade,
   },
 };
 </script>

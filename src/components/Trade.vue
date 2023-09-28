@@ -77,13 +77,13 @@
 
 <script>
 /* eslint-disable */
-import Resumen from "@/components/Resumen.vue";
+import Resumen from "@/components/ResumenTrade.vue";
 import Loader from "@/components/Loader.vue";
 import { mapGetters } from "vuex";
 import swal from 'sweetalert';
 
 export default {
-  name: "NuevaCompra-Venta",
+  name: "TradeComponent",
   data() {
     return {
       accion: "",
