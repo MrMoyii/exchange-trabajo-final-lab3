@@ -4,7 +4,7 @@
     <div class="container">
       <!-- accion a realizar -->
       <h2>Seleccionar Compra o Venta</h2>
-      <div class="select-wrapper">
+      <div class="select-wrapper bounceAnimation">
         <select id="acciona" v-model="accion">
           <option value="" disabled selected>Elige una opción</option>
           <option>Compra</option>
@@ -16,7 +16,7 @@
       <div v-if="accion">
         {{ guardarAccionSeleccionada }}
         <br />
-        <div class="select-wrapper">
+        <div class="select-wrapper bounceAnimation">
           <select id="coin" v-model="coin">
             <option value="" disabled selected>Elige una cripto</option>
             <option>BTC</option>
@@ -28,7 +28,7 @@
         </div>
       </div>
       <!-- monto a ingresar -->
-      <div v-if="coin">
+      <div v-if="coin" class="bounceAnimation">
         <br />
         <input
           type="number"
@@ -48,7 +48,7 @@
         <Loader></Loader>
       </div>
       <!-- muertra el resumen de la accion a realizar -->
-      <div v-if="esMontoPermitido">
+      <div v-if="esMontoPermitido" class="bounceAnimation">
         {{ mandarCoinYCantidad }}
         <br />
         <Resumen></Resumen>
@@ -61,7 +61,7 @@
         </p>
       </div>
       <!-- botones -->
-      <div v-if="this.$store.state.cargaCompleta">
+      <div v-if="this.$store.state.cargaCompleta" class="bounceAnimation">
         <div v-if="esMontoPermitido && this.accion == 'Compra'">
           <br />
           <input class="btn" type="submit" :value="btnValue" />
@@ -80,7 +80,7 @@
 import Resumen from "@/components/ResumenTrade.vue";
 import Loader from "@/components/Loader.vue";
 import { mapGetters } from "vuex";
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 export default {
   name: "TradeComponent",
@@ -157,7 +157,12 @@ export default {
       this.$store.dispatch('PostDatos', requestBody)
         .then(() => {
           this.componenteCarga = false;
-          swal("Transacción exitosa",{icon: "success", buttons: false,});
+          Swal.fire({
+            icon: 'success',
+            title: 'Transacción exitosa',
+            showConfirmButton: false,
+            timer: 1500
+          })
         });
     },
   },

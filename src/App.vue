@@ -32,4 +32,8 @@ nav a {
 nav a.router-link-exact-active {
   color: #007bff;
 }
+
+.bounceAnimation {
+  animation: swal2-show 0.3s;
+}
 </style>

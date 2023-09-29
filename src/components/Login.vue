@@ -1,6 +1,6 @@
 <template>
   <div class="cuerpo">
-    <div class="container">
+    <div class="container bounceAnimation">
       <h2>Iniciar Sesión</h2>
       <form @submit.prevent="guardarUsuario">
         <div class="input-group">
@@ -27,7 +27,7 @@
 <script>
 /* eslint-disable */
 import validarStringAlfaNum from "@/tools/validaciones.js";
-import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 export default {
   name: "Login",
   data(){
@@ -46,7 +46,12 @@ export default {
     guardarUsuario(){
       if(validarStringAlfaNum(this.username))
       {
-        swal("Registrado",{icon: "success", buttons: false,});
+        Swal.fire({
+          icon: 'success',
+          title: 'Registrado',
+          showConfirmButton: false,
+          timer: 1500
+        })
         this.error = false
         this.$store.commit('guardarUsername', this.username);
         this.$router.push('trade');
