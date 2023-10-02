@@ -36,4 +36,33 @@ nav a.router-link-exact-active {
 .bounceAnimation {
   animation: swal2-show 0.3s;
 }
+
+.select-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+select {
+  appearance: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-size: 16px;
+  width: 200px;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
 </style>
