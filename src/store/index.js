@@ -72,6 +72,13 @@ export default createStore({
         console.log("Error al enviar la solicitud DELETE...:", error)
       }
     },
+    async EditarPorId({commit}, body) {
+      try {
+        await apiTransacciones.put(`/transactions/${body._id}`, body);
+      } catch (error) {
+        console.log("Error al enviar la solicitud UPDATE...:", error)
+      }
+    }
   },
   modules: {
     criptoYa,

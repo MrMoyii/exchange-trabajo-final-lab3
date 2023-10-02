@@ -17,7 +17,7 @@
         <th>Fecha</th>
         <th>Cantidad</th>
         <th>Monto</th>
-        <th>Ver/Editar/Borrar</th>
+        <th>Botones</th>
       </tr>
       <tr v-for="transaccion in datosHistorial" :key="transaccion.id">
         <td>{{ transaccion.crypto_code }}</td>
@@ -25,48 +25,145 @@
         <td>{{ formateoFecha(transaccion.datetime) }}</td>
         <td>{{ transaccion.crypto_amount }}</td>
         <td>$ {{ transaccion.money }}</td>
-        <!---------------todo--------------->
         <td>
-          <button class="btn" @click="Ver(transaccion)">Ver</button>
-          <button class="btn" @click="Editar(transaccion)">Editar</button>
+          <button class="btn" @click="ModalVer(transaccion)">Ver</button>
+          <button class="btn" @click="ModalEditar(transaccion)">Editar</button>
           <button class="btn" @click="Borrar(transaccion._id)">Borrar</button>
         </td>
-        <!---------------todo--------------->
       </tr>
     </table>
   </div>
 
-  <!-- Pantalla de detalles del campo elegido -->
+  <!-- Modal para ver los datos de la transaccion -->
   <div v-if="estaModalVistaActivo" class="modal" id="modal">
     <div class="modal-content">
       <h2>Detalles de la transacción</h2>
-      <table>
-        <tr>
-          <td><strong>Acción:</strong></td>
-          <td>{{ transaccionElegida.action }}</td>
-        </tr>
-        <tr>
-          <td><strong>Crypto:</strong></td>
-          <td>{{ transaccionElegida.crypto_code }}</td>
-        </tr>
-        <tr>
-          <td><strong>Cantidad:</strong></td>
-          <td>{{ transaccionElegida.crypto_amount }}</td>
-        </tr>
-        <tr>
-          <td><strong>Dinero:</strong></td>
-          <td>${{ transaccionElegida.money }}</td>
-        </tr>
-        <tr>
-          <td><strong>Fecha:</strong></td>
-          <td>{{ formateoFecha(transaccionElegida.datetime) }}</td>
-        </tr>
-      </table>
+      <div class="itemsCentrados">
+        <table>
+          <tr>
+            <td><strong>Acción:</strong></td>
+            <td>{{ transaccionElegida.action }}</td>
+          </tr>
+          <tr>
+            <td><strong>Crypto:</strong></td>
+            <td>{{ transaccionElegida.crypto_code }}</td>
+          </tr>
+          <tr>
+            <td><strong>Cantidad:</strong></td>
+            <td>{{ transaccionElegida.crypto_amount }}</td>
+          </tr>
+          <tr>
+            <td><strong>Dinero:</strong></td>
+            <td>${{ transaccionElegida.money }}</td>
+          </tr>
+          <tr>
+            <td><strong>Fecha:</strong></td>
+            <td>{{ formateoFecha(transaccionElegida.datetime) }}</td>
+          </tr>
+        </table>
+      </div>
+      <br />
       <input
         type="submit"
         class="btn_cerrar"
         value="Cerrar"
         @click="estaModalVistaActivo = false"
+      />
+    </div>
+  </div>
+
+  <!-- Modal para editar transacción -->
+  <div v-if="estaModalEditarActivo" class="modal" id="modal">
+    <div class="modal-content">
+      <h2>Editar transacción</h2>
+      <div class="input-group">
+        <table>
+          <tr>
+            <td><strong>Acción:</strong></td>
+            <td>{{ transaccionElegida.action }}</td>
+            <td>
+              <div class="select-wrapper bounceAnimation">
+                <select v-model="transaccionAEditar.action">
+                  <option disabled selected>
+                    {{ transaccionElegida.action }}
+                    <!-- {{
+                      transaccionElegida.action == "purchase"
+                        ? "Compra"
+                        : "Venta"
+                    }} -->
+                  </option>
+                  <option>Compra</option>
+                  <option>Venta</option>
+                </select>
+                <div class="arrow">▼</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Crypto:</strong></td>
+            <td>{{ transaccionElegida.crypto_code }}</td>
+            <td>
+              <div class="select-wrapper bounceAnimation">
+                <select v-model="transaccionAEditar.crypto_code">
+                  <option disabled selected>
+                    {{ transaccionElegida.crypto_code }}
+                  </option>
+                  <option>BTC</option>
+                  <option>DAI</option>
+                  <option>ETH</option>
+                  <option>USDT</option>
+                </select>
+                <div class="arrow">▼</div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Cantidad:</strong></td>
+            <td>{{ transaccionElegida.crypto_amount }}</td>
+            <td>
+              <div class="bounceAnimation">
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  name="numeroDecimal"
+                  id="numeroDecimal"
+                  placeholder="Ingresar monto"
+                  v-model.number="transaccionAEditar.crypto_amount"
+                />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Dinero:</strong></td>
+            <td>${{ transaccionElegida.money }}</td>
+            <td>
+              <div class="bounceAnimation">
+                <input
+                  v-model="transaccionAEditar.money"
+                  type="number"
+                  step="0.01"
+                />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Fecha:</strong></td>
+            <td>{{ formateoFecha(transaccionElegida.datetime) }}</td>
+          </tr>
+        </table>
+      </div>
+      <input
+        type="submit"
+        class="btn_editar"
+        value="Guardar"
+        @click="GuardarCambiosEditados"
+      />
+      <input
+        type="submit"
+        class="btn_cerrar"
+        value="Cerrar"
+        @click="estaModalEditarActivo = false"
       />
     </div>
   </div>
@@ -76,6 +173,7 @@
 import { mapGetters } from "vuex";
 import Loader from "@/components/Loader.vue";
 import formateoFecha from "@/tools/formatearFecha.js";
+import obtenerFechaActual from "@/tools/obtenerFechaActual.js";
 import Swal from "sweetalert2";
 
 export default {
@@ -84,9 +182,18 @@ export default {
     return {
       datosHistorial: null,
       transaccionElegida: null,
+      transaccionAEditar: {
+        _id: "",
+        crypto_code: "",
+        crypto_amount: "",
+        money: "",
+        user_id: "",
+        action: "",
+        datetime: ""
+      },
       estaHistorialVacio: false,
       estaModalVistaActivo: false,
-      estaModalEditarActivo: false, 
+      estaModalEditarActivo: false,
     }
   },
   components: {
@@ -103,14 +210,16 @@ export default {
   },
   methods: {
     formateoFecha,
-    Ver(transaccion){
+    ModalVer(transaccion) {
       this.transaccionElegida = transaccion;
       this.estaModalVistaActivo = true;
     },
-    Editar(id){
-      // this.$store.dispatch("BorrarPorID", id);
+    ModalEditar(transaccion) {
+      this.transaccionElegida = transaccion;
+      this.transaccionAEditar = {...transaccion};
+      this.estaModalEditarActivo = true;
     },
-    Borrar(id){
+    Borrar(id) {
       Swal.fire({
         title: 'Estas seguro?',
         text: "¡No podrás revertir esto!",
@@ -135,7 +244,7 @@ export default {
         }
       })
     },
-    ObtenerHistorial(){
+    ObtenerHistorial() {
       this.datosHistorial = null;
       this.estaHistorialVacio = false;
       this.$store.dispatch("ObtenerHistorial")
@@ -144,6 +253,36 @@ export default {
           this.estaHistorialVacio = true;
         this.datosHistorial = this.getHistorial;
       });
+    },
+    GuardarCambiosEditados() {
+      this.estaModalEditarActivo = false
+      
+      if(this.transaccionAEditar.action == "Compra") this.transaccionAEditar.action = "purchase";
+      if(this.transaccionAEditar.action == "Venta") this.transaccionAEditar.action = "sale";
+      
+      //seteo la fecha de modificacion
+      this.transaccionAEditar.datetime = obtenerFechaActual();
+      
+      //comparar si los dos objetos son iguales
+      console.log(JSON.stringify(this.transaccionElegida) === JSON.stringify(this.transaccionAEditar));
+      if(JSON.stringify(this.transaccionElegida) === JSON.stringify(this.transaccionAEditar)){
+        Swal.fire({
+          icon: 'warning',
+          title: 'No hay cambios realizados',
+        })
+      }
+      else {
+        this.datosHistorial = null;
+        this.$store.dispatch("EditarPorId", this.transaccionAEditar)
+        .then(() => {
+          this.ObtenerHistorial();
+          Swal.fire(
+          '¡Editado!',
+          'La transaccion ha sido editada',
+          'success'
+          )
+        })
+      }
     }
   }
 };
@@ -232,6 +371,20 @@ export default {
   animation: swal2-show .3s;
 }
 
+.btn_editar {
+  background-color: rgb(10, 160, 35);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 15px;
+}
+.btn_editar:hover {
+  background-color: rgb(6, 104, 22);
+}
+
 .btn_cerrar {
   background-color: rgb(221, 51, 51);
   color: #fff;
@@ -240,9 +393,37 @@ export default {
   padding: 10px 20px;
   cursor: pointer;
   font-size: 16px;
-  margin-top: 13px;
 }
 .btn_cerrar:hover {
   background-color: rgb(194, 51, 51);
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 180px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.itemsCentrados {
+  display: grid;
+  place-items: center;
 }
 </style>
