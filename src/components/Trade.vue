@@ -78,6 +78,7 @@
 <script>
 /* eslint-disable */
 import Resumen from "@/components/ResumenTrade.vue";
+import obtenerMontoActual from "@/tools/obtenerMontoActual";
 import Loader from "@/components/Loader.vue";
 import { mapGetters } from "vuex";
 import Swal from 'sweetalert2';
@@ -113,18 +114,20 @@ export default {
     },
     esMontoVentaValido() {
       if(this.accion == "Venta"){
-        //consulto el historial
-        let historial = this.getHistorial;
-        //busco si se escunetra un objeto que coincida con la coin seleccionada
-        let coinEncontrada = historial.find(x => x.crypto_code == this.coin);
-        //si la cantidad ingresada no es mayor a la guardada se puede vender
-        if(coinEncontrada.crypto_amount >= this.montoIngresado) {
-          this.errorVenta = false;
-          return true;
-        }
-        else {
+        if (this.getHistorial.length < 1 || this.getHistorial == undefined) {
           this.errorVenta = true;
           return false;
+        }
+        //obtengo el valor de mi monto actual segun la coin seleccionada
+        let miMonto = obtenerMontoActual(this.getHistorial, this.coin);
+        
+        if(this.montoIngresado > miMonto) {
+          this.errorVenta = true;
+          return false;
+        }
+        else {
+          this.errorVenta = false;
+          return true;
         }
       }
     },
@@ -164,6 +167,11 @@ export default {
             timer: 1500
           })
         });
+      this.accion = "";
+      this.coin = "";
+      this.montoIngresado = null;
+      this.purchaseORSale = "";
+      this.$store.dispatch("ObtenerHistorial");
     },
   },
 };
