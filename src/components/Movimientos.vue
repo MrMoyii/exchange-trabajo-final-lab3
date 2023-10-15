@@ -9,7 +9,7 @@
   </div>
 
   <!-- pantalla historial -->
-  <div class="containerHistorial bounceAnimation" v-if="datosHistorial">
+  <div class="containerHistorial bounceAnimation" v-else-if="datosHistorial">
     <table class="tftable">
       <tr>
         <th>Moneda</th>
