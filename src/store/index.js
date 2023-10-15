@@ -52,7 +52,7 @@ export default createStore({
         else if(payload.action == "sale") {
           commit("guardarVenta", payload);
         }
-        else console.log("Ocurrio un error al guarsdar la compra o venta.");
+        else console.log("Ocurrio un error al guardar la compra o venta.");
       } catch (error) {
         console.error("Error al enviar la solicitud POST...:", error);
       }

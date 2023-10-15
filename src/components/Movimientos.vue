@@ -264,7 +264,6 @@ export default {
       this.transaccionAEditar.datetime = obtenerFechaActual();
       
       //comparar si los dos objetos son iguales
-      console.log(JSON.stringify(this.transaccionElegida) === JSON.stringify(this.transaccionAEditar));
       if(JSON.stringify(this.transaccionElegida) === JSON.stringify(this.transaccionAEditar)){
         Swal.fire({
           icon: 'warning',

@@ -156,7 +156,6 @@ export default {
       };
       
       this.componenteCarga = true;
-      // Llama a la acción de Vuex para enviar la solicitud POST
       this.$store.dispatch('PostDatos', requestBody)
         .then(() => {
           this.componenteCarga = false;
