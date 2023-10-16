@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/LoginView.vue";
 import Trade from "../views/TradeView.vue";
 import Movimientos from "../views/MovimientosView.vue";
+import EstadoActual from "../views/EstadoActualView.vue";
 
 const routes = [
   {
@@ -21,6 +22,12 @@ const routes = [
     name: "Movimientos",
     props: true,
     component: Movimientos,
+  },
+  {
+    path: "/estadoActual",
+    name: "EstadoActual",
+    props: true,
+    component: EstadoActual,
   },
 ];
 

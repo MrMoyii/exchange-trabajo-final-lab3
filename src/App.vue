@@ -5,6 +5,7 @@
       <router-link to="/">Login</router-link> |
       <router-link to="/trade">Compra/Venta</router-link> |
       <router-link to="/movimientos">Movimientos</router-link> |
+      <router-link to="/estadoActual">Estado Actual</router-link> |
     </nav>
   </div>
 
