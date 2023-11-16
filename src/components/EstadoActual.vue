@@ -16,9 +16,9 @@
         <th>Dinero</th>
       </tr>
       <tr v-for="transaccion in datosHistorial" :key="transaccion.id">
-        <td>{{ transaccion.key }}</td>
+        <td>{{ transaccion[0].crypto_code }}</td>
         <td>
-          {{ ObtenerCantidadCoin(transaccion.key) }}
+          {{ ObtenerCantidadCoin(transaccion) }}
         </td>
         <td>$ {{ CalcularValor(transaccion) }}</td>
       </tr>
@@ -67,30 +67,25 @@ export default {
           return coin.crypto_code;
         });
         this.datosHistorial = coinsObj;
+        // this.datosHistorial = this.getHistorial;
       });
     },
-    ObtenerCantidadCoin(nombreCoin) {
-      console.log(this.datosHistorial);
-      console.log(nombreCoin);
-
+    ObtenerCantidadCoin(arrayCoin) {
+      console.log(arrayCoin);
       let sumaCoin = 0;
-      let historial = this.datosHistorial;
-
-      for (let i = 0; i < historial[nombreCoin].length; i++) {
-        sumaCoin += historial[nombreCoin].crypto_amount;
-      }
+      arrayCoin.forEach(e => { sumaCoin += e.crypto_amount; });
       return sumaCoin;
     },
     CalcularValor(coinElegida) {
       let sumaCoin = 0;
       let historial = this.datosHistorial;
 
-      for (let i = 0; i < historial[coinElegida].length; i++) {
-        if(historial[coinElegida].action == "purchase")
-          sumaCoin += historial[coinElegida].money;
-        if(historial[coinElegida].action == "sale")
-          sumaCoin -= historial[coinElegida].money;
-      }
+      // for (let i = 0; i < historial[coinElegida].length; i++) {
+      //   if(historial[coinElegida].action == "purchase")
+      //     sumaCoin += historial[coinElegida].money;
+      //   if(historial[coinElegida].action == "sale")
+      //     sumaCoin -= historial[coinElegida].money;
+      // }
       return sumaCoin;
     },
     calcularSumaTotal() {
