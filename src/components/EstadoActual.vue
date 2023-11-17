@@ -34,6 +34,7 @@
 <script>
 /* eslint-disable */
 import Loader from "@/components/Loader.vue";
+import ObtenerCantidadCoin from "../tools/EstadoActual/ObtenerCantidadCoin.js"
 import { mapGetters } from "vuex";
 export default {
   name: "EstadoActualComponent",
@@ -55,6 +56,7 @@ export default {
     ...mapGetters(["getHistorial"]),
   },
   methods: {
+    ObtenerCantidadCoin,
     ObtenerHistorial() {
       this.datosHistorial = null;
       this.estaHistorialVacio = false;
@@ -69,12 +71,6 @@ export default {
         this.datosHistorial = coinsObj;
         // this.datosHistorial = this.getHistorial;
       });
-    },
-    ObtenerCantidadCoin(arrayCoin) {
-      console.log(arrayCoin);
-      let sumaCoin = 0;
-      arrayCoin.forEach(e => { sumaCoin += e.crypto_amount; });
-      return sumaCoin;
     },
     CalcularValor(coinElegida) {
       let sumaCoin = 0;
