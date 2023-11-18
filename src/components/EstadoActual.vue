@@ -8,19 +8,22 @@
     <h4>Historial Vacio</h4>
   </div>
   <!-- pantalla historial -->
-  <div class="containerHistorial bounceAnimation" v-else-if="datosHistorial">
+  <div
+    class="containerHistorial bounceAnimation"
+    v-else-if="datosHistorial && !cargando"
+  >
     <table class="tftable">
       <tr>
         <th>Moneda</th>
         <th>Cantidad</th>
         <th>Dinero</th>
       </tr>
-      <tr v-for="transaccion in datosHistorial" :key="transaccion.id">
-        <td>{{ transaccion[0].crypto_code }}</td>
+      <tr v-for="transaccion in cartera" :key="transaccion.id">
+        <td>{{ transaccion.simbolo }}</td>
         <td>
-          {{ ObtenerCantidadCoin(transaccion) }}
+          {{ transaccion.monto }}
         </td>
-        <td>$ {{ CalcularValor(transaccion) }}</td>
+        <td>$ {{ transaccion.montoEnDinero }}</td>
       </tr>
       <tr>
         <td>Total</td>
@@ -33,8 +36,8 @@
 </template>
 <script>
 /* eslint-disable */
+import axios from "axios";
 import Loader from "@/components/Loader.vue";
-import ObtenerCantidadCoin from "../tools/EstadoActual/ObtenerCantidadCoin.js"
 import { mapGetters } from "vuex";
 export default {
   name: "EstadoActualComponent",
@@ -42,6 +45,13 @@ export default {
     return {
       datosHistorial: null,
       estaHistorialVacio: false,
+      cartera: [
+        { id: 0, simbolo: "BTC", monto: 0, montoEnDinero: 0, },
+        { id: 1, simbolo: "DAI", monto: 0, montoEnDinero: 0, },
+        { id: 3, simbolo: "ETH", monto: 0, montoEnDinero: 0, },
+        { id: 4, simbolo: "USDT", monto: 0, montoEnDinero: 0, },
+      ],
+      cargando: true,
     };
   },
   components: {
@@ -50,13 +60,33 @@ export default {
   mounted() {
     if (this.$store.state.username == "") {
       this.$router.push("/");
-    } else this.ObtenerHistorial();
+    } else {
+      this.ObtenerHistorial();
+      
+    }
   },
   computed: {
     ...mapGetters(["getHistorial"]),
   },
   methods: {
-    ObtenerCantidadCoin,
+    CargarMontos(){
+      this.datosHistorial.forEach(transaccion => {
+        this.cartera.find(i => i.simbolo === transaccion.crypto_code).monto += transaccion.crypto_amount;
+      });
+    },
+    CargarMontoEnDinero() {
+      this.cartera.forEach(e => {
+        axios.get(`https://criptoya.com/api/argenbtc/${e.simbolo}/ars`)
+          .then(response => {
+            let precio = response.data.totalAsk;
+            // console.log((precio * e.monto).toFixed(2))
+            e.montoEnDinero = (precio * e.monto).toFixed(2);
+          })
+          .catch(error => {
+            console.error('Error al obtener los datos:', error);
+          });
+      });
+    },
     ObtenerHistorial() {
       this.datosHistorial = null;
       this.estaHistorialVacio = false;
@@ -64,33 +94,20 @@ export default {
       .then(() => {
         if(this.getHistorial.length < 1)
           this.estaHistorialVacio = true;
-        //ordeno por coin
-        let coinsObj = Object.groupBy(this.getHistorial, (coin) => {
-          return coin.crypto_code;
-        });
-        this.datosHistorial = coinsObj;
-        // this.datosHistorial = this.getHistorial;
+
+        this.datosHistorial = this.getHistorial;
+        this.CargarMontos();
+        this.CargarMontoEnDinero();
+        this.calcularSumaTotal();
       });
     },
-    CalcularValor(coinElegida) {
-      let sumaCoin = 0;
-      let historial = this.datosHistorial;
-
-      // for (let i = 0; i < historial[coinElegida].length; i++) {
-      //   if(historial[coinElegida].action == "purchase")
-      //     sumaCoin += historial[coinElegida].money;
-      //   if(historial[coinElegida].action == "sale")
-      //     sumaCoin -= historial[coinElegida].money;
-      // }
-      return sumaCoin;
-    },
     calcularSumaTotal() {
-      let historial = this.getHistorial;
-
       let sumaTotal = 0;
-      for (let i = 0; i < historial.length; i++) {
-        sumaTotal += historial[i].money; 
+
+      for (let i = 0; i < this.cartera.length; i++) {
+        sumaTotal += parseFloat(this.cartera[i].montoEnDinero);
       }
+      this.cargando = false;
       return sumaTotal;
     }
   }
