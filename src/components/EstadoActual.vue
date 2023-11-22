@@ -26,7 +26,7 @@
         <td>$ {{ transaccion.montoEnDinero }}</td>
       </tr>
       <tr>
-        <td>Total</td>
+        <td>TOTAL</td>
         <td></td>
         <!-- calcular la suma de todas las criptos-->
         <td>$ {{ calcularSumaTotal() }}</td>
@@ -62,7 +62,7 @@ export default {
       this.$router.push("/");
     } else {
       this.ObtenerHistorial();
-      
+      this.cargando = false;
     }
   },
   computed: {
@@ -71,7 +71,16 @@ export default {
   methods: {
     CargarMontos(){
       this.datosHistorial.forEach(transaccion => {
-        this.cartera.find(i => i.simbolo === transaccion.crypto_code).monto += transaccion.crypto_amount;
+        if(transaccion.action == "sale"){
+          this.cartera.find(
+            i => i.simbolo === transaccion.crypto_code
+          ).monto -= parseFloat(transaccion.crypto_amount);
+        }
+        else if(transaccion.action == "purchase"){
+          this.cartera.find(
+            i => i.simbolo === transaccion.crypto_code
+          ).monto += parseFloat(transaccion.crypto_amount);
+        }
       });
     },
     CargarMontoEnDinero() {
@@ -99,6 +108,9 @@ export default {
         this.CargarMontos();
         this.CargarMontoEnDinero();
         this.calcularSumaTotal();
+        setTimeout(() => {
+        }, 3000);
+        this.cargando = false;
       });
     },
     calcularSumaTotal() {
@@ -107,7 +119,6 @@ export default {
       for (let i = 0; i < this.cartera.length; i++) {
         sumaTotal += parseFloat(this.cartera[i].montoEnDinero);
       }
-      this.cargando = false;
       return sumaTotal;
     }
   }
