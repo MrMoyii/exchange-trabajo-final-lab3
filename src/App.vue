@@ -66,4 +66,18 @@ select:focus {
   transform: translateY(-50%);
   pointer-events: none;
 }
+
+.cuerpo {
+  font-family: Arial, sans-serif;
+  background-color: #e3e3e3;
+  /* background-image: url("../assets/toro-oso.jpeg"); */
+  background-size: cover;
+  background-repeat: round;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  width: auto;
+  margin: 0;
+}
 </style>

@@ -15,14 +15,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.cuerpo {
-  font-family: Arial, sans-serif;
-  background-color: #e3e3e3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 97.5vh;
-  margin: 0;
-}
-</style>
+<style></style>
