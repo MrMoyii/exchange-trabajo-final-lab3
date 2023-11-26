@@ -19,16 +19,24 @@
         <th>Monto</th>
         <th>Botones</th>
       </tr>
-      <tr v-for="transaccion in datosHistorial" :key="transaccion.id">
+      <tr
+        v-for="transaccion in datosHistorial"
+        :key="transaccion.id"
+        :class="obtenerClassPorSimbolo(transaccion.crypto_code)"
+      >
         <td>{{ transaccion.crypto_code }}</td>
         <td>{{ transaccion.action }}</td>
         <td>{{ formateoFecha(transaccion.datetime) }}</td>
         <td>{{ transaccion.crypto_amount }}</td>
         <td>$ {{ transaccion.money }}</td>
         <td>
-          <button class="btn" @click="ModalVer(transaccion)">Ver</button>
-          <button class="btn" @click="ModalEditar(transaccion)">Editar</button>
-          <button class="btn" @click="Borrar(transaccion._id)">Borrar</button>
+          <button class="btn-accion" @click="ModalVer(transaccion)">Ver</button>
+          <button class="btn-accion" @click="ModalEditar(transaccion)">
+            Editar
+          </button>
+          <button class="btn-accion" @click="Borrar(transaccion._id)">
+            Borrar
+          </button>
         </td>
       </tr>
     </table>
@@ -282,7 +290,18 @@ export default {
           )
         })
       }
-    }
+    },
+    obtenerClassPorSimbolo(simbolo) {
+      if (simbolo === 'DAI') {
+        return 'fondo-DAI';
+      } else if (simbolo === 'BTC') {
+        return 'fondo-BTC';
+      } else if (simbolo === 'ETH'){
+        return 'fondo-ETH';
+      } else if (simbolo === 'USDT'){
+        return 'fondo-USDT';
+      } else '';
+    },
   }
 };
 </script>
@@ -316,10 +335,8 @@ export default {
   padding: 8px;
   border-style: solid;
   border-color: #59a9ff;
+  /*border-color: white;*/
   text-align:center;
-}
-.tftable tr {
-  background-color:#d4e3e5;
 }
 .tftable td {
   font-size:14px;
@@ -332,7 +349,7 @@ export default {
   background-color:#ffffff;
 }
 
-.btn {
+.btn-accion {
   background-color: #007bff;
   color: #fff;
   padding: 3px 4px 3px 4px;
@@ -341,7 +358,7 @@ export default {
   font-size: 15px;
 }
 
-.btn:hover {
+.btn-accion:hover {
   background-color: #0056b3;
 }
 
@@ -424,5 +441,18 @@ export default {
 .itemsCentrados {
   display: grid;
   place-items: center;
+}
+
+.fondo-DAI {
+  background-color: #ccffcc;
+}
+.fondo-BTC {
+  background-color: #b3e0ff;
+}
+.fondo-ETH {
+  background-color: #f2b3ff;
+}
+.fondo-USDT {
+  background-color: #e6ffb3;
 }
 </style>

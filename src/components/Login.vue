@@ -63,10 +63,6 @@ export default {
 </script>
 
 <style scoped>
-  .error {
-    color: #d02323;
-  }
-
   .cuerpo {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -114,19 +110,5 @@ export default {
   .input-group input:focus {
     outline: none;
     border-color: #007bff;
-  }
-
-  .btn {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-
-  .btn:hover {
-    background-color: #0056b3;
   }
 </style>

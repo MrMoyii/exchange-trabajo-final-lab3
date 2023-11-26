@@ -206,22 +206,7 @@ export default {
   cursor: pointer;
 }
 
-.btn {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn:hover {
-  background-color: #0056b3;
-}
-
 .error {
-  color: #d02323;
   max-width: 322px;
 }
 </style>
